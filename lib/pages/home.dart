@@ -11,7 +11,9 @@ class Home extends StatelessWidget {
       body: Center(
         child: FlatButton(
           child: Text('Tolerance'),
-          onPressed: () => {},
+          onPressed: () {
+            Navigator.pushNamed(context, '/tolerance');
+          },
         ),
       ),
     );

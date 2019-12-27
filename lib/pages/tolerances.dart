@@ -27,6 +27,10 @@ class _TolerancesPageState extends State<TolerancesPage> {
       body: FutureBuilder(
         future: data,
         builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return Text('');
+          }
+
           final parsed = snapshot.data;
           String size = parsed['ranges'][sizeIndex];
           String type = parsed['data'][typeIndex]['label'];

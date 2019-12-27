@@ -12,5 +12,5 @@ void main() => runApp(MaterialApp(
         '/': (context) => Home(),
         '/tolerance': (context) => TolerancesPage(),
       },
-      initialRoute: '/tolerance',
+      initialRoute: '/',
     ));
