@@ -33,45 +33,80 @@ class _TolerancesPageState extends State<TolerancesPage> {
 
           final parsed = snapshot.data;
           String size = parsed['ranges'][sizeIndex];
-          String type = parsed['data'][typeIndex]['label'];
+          bool hole = parsed['data'][typeIndex]['hole'];
 
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Container(
                 width: 100,
-                child: ListView.builder(
-                    itemCount: parsed['ranges'].length,
-                    scrollDirection: Axis.vertical,
-                    padding: const EdgeInsets.all(5),
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        height: 50,
-                        child: FlatButton(
-                          textColor: sizeIndex == index ? Colors.yellowAccent : Colors.white,
-                          onPressed: () {
-                            setState(() {
-                              sizeIndex = index;
-                            });
-                          },
-                          child: Text(parsed['ranges'][index]),
-                        ),
-                      );
-                    }),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    children: parsed['ranges']
+                        .asMap()
+                        .map<dynamic, Widget>((index, range) {
+                          return MapEntry(
+                            index,
+                            Container(
+                              height: 50,
+                              child: FlatButton(
+                                textColor: sizeIndex == index
+                                    ? Colors.yellowAccent
+                                    : Colors.white,
+                                onPressed: () {
+                                  setState(() {
+                                    sizeIndex = index;
+                                  });
+                                },
+                                child: Text(range),
+                              ),
+                            ),
+                          );
+                        })
+                        .values
+                        .toList(),
+                  ),
+                ),
               ),
-              Column(
-                children: <Widget>[
-                  Text(''),
-                  Text('Ø$size'),
-                  Text(''),
-                  Text('$type'),
-                  Text(''),
-                  Text(parsed['data'][typeIndex]['limits'][sizeIndex][1]
-                      .toString()),
-                  Text(''),
-                  Text(parsed['data'][typeIndex]['limits'][sizeIndex][0]
-                      .toString())
-                ],
+              Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Text('Ø$size'),
+                        Column(
+                          children: <Widget>[
+                            Text(parsed['data'][typeIndex]['limits'][sizeIndex]
+                                          [1]
+                                      .toString(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                            Text(
+                              parsed['data'][typeIndex]['limits'][sizeIndex][0]
+                                  .toString(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w300,
+                              ),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                    Image.asset(
+                      hole
+                          ? 'assets/images/hole.png'
+                          : 'assets/images/shaft.png',
+                      height: 100,
+                      width: 100,
+                    ),
+                    Text(parsed['data'][typeIndex]['label']),
+                  ],
+                ),
               ),
               Container(
                 width: 100,
@@ -83,7 +118,9 @@ class _TolerancesPageState extends State<TolerancesPage> {
                       return Container(
                         height: 50,
                         child: FlatButton(
-                          textColor: typeIndex == index ? Colors.yellowAccent : Colors.white,
+                          textColor: typeIndex == index
+                              ? Colors.yellowAccent
+                              : Colors.white,
                           onPressed: () {
                             setState(() {
                               typeIndex = index;
